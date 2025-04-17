@@ -12,7 +12,9 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Google Sheets setup
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+creds_json = os.getenv("GOOGLE_CREDS_JSON")
+creds_dict = json.loads(creds_json)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1konwN3p4TJ9uRnHqfsAbV4OJX4ZQgBDxgFASQkkFWPw/edit?usp=sharing").sheet1
 
@@ -48,4 +50,4 @@ async def info(ctx):
     await ctx.send("Order number not found.")
 
 keep_alive()
-bot.run("discord_token")
+bot.run(os.getenv("DISCORD_TOKEN"))
